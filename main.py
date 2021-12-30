@@ -4,6 +4,7 @@ from random import choice
 from datetime import datetime
 from tkinter import messagebox
 import pyperclip
+import json
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 
 
@@ -36,10 +37,27 @@ def save_details():
         if is_ok:
             c_date = datetime.today().strftime('%B %d, %Y')
             c_time = datetime.now().strftime("%H:%M")
-            contents = f"Date : {c_date}\nTime : {c_time} \nWebsite : {user_website}\nUsername/email : {user_email}\nPassword : {user_pass}\n\n"
-            with open("saved_info.txt", "a") as file:
-                file.write(contents)
-            refresh()
+            new_dict = {user_website:
+            {
+                "date": c_date,
+                "email": user_email,
+                "password": user_pass
+            }}
+            try:
+                with open("saved_info.json", "r") as file:
+                    data = json.load(file)
+                    data.update(new_dict)
+
+                with open("saved_info.json", "w") as file:
+                    json.dump(data, file, indent=4)
+                refresh()
+            except FileNotFoundError:
+                with open("saved_info.json", "w") as file:
+                    json.dump(new_dict, file, indent=4)
+            finally:
+                refresh()
+
+
 
 def refresh():
     t_website.delete(0, END)
