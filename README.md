@@ -3,7 +3,7 @@
 ![Screenshot](images/ss1.PNG)
 
 ### Add the details and generate a password.
-###Generated password gets copied to the clipboard 
+### Generated password gets copied to the clipboard 
 
 ![Screenshot](images/ss2.PNG)
 
