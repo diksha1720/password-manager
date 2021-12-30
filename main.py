@@ -25,8 +25,23 @@ def gen_password():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
+
+def search_data():
+    user_website = t_website.get().title()
+
+    try:
+        with open("saved_info.json") as file:
+            data = json.load(file)
+        messagebox.showinfo(title=user_website, message=f"Email: {data[user_website]['email']}\n\nPassword: {data[user_website]['password']}")
+        pyperclip.copy(data[user_website]["password"])
+    except ValueError:
+        messagebox.showinfo(title="Error", message="No saved passwords")
+    except KeyError:
+        messagebox.showinfo(title="Error", message=f"No saved passwords with {user_website}")
+
+
 def save_details():
-    user_website = t_website.get()
+    user_website = t_website.get().title()
     user_email = t_email.get()
     user_pass = t_password.get()
 
@@ -36,27 +51,24 @@ def save_details():
         is_ok = messagebox.askokcancel(title=user_website, message=f"These are the details you entered\n\nEmail : {user_email}\nPassword : {user_pass}\n\nDo you want to proceed?")
         if is_ok:
             c_date = datetime.today().strftime('%B %d, %Y')
-            c_time = datetime.now().strftime("%H:%M")
             new_dict = {user_website:
             {
                 "date": c_date,
                 "email": user_email,
                 "password": user_pass
             }}
+
             try:
                 with open("saved_info.json", "r") as file:
                     data = json.load(file)
                     data.update(new_dict)
-
                 with open("saved_info.json", "w") as file:
                     json.dump(data, file, indent=4)
-                refresh()
             except FileNotFoundError:
                 with open("saved_info.json", "w") as file:
                     json.dump(new_dict, file, indent=4)
             finally:
                 refresh()
-
 
 
 def refresh():
@@ -79,29 +91,28 @@ canvas.grid(column=1, row=0)
 l_website = Label(text="Website:")
 l_website.grid(column=0, row=1)
 
-t_website = Entry(width=40)
-t_website.grid(column=1, row=1, columnspan=2)
-t_website.focus()
-
-
 l_email = Label(text="Email/Username:")
 l_email.grid(column=0, row=2)
+
+l_password = Label(text="Password:")
+l_password.grid(column=0, row=3)
+
+t_website = Entry(width=22)
+t_website.grid(column=1, row=1)
+t_website.focus()
 
 t_email = Entry(width=40)
 t_email.grid(column=1, row=2, columnspan=2)
 t_email.insert(0, "diksha@test.com")
 
-
-l_password = Label(text="Password:")
-l_password.grid(column=0, row=3)
-
 t_password = Entry(width=22)
 t_password.grid(column=1, row=3)
 
+b_search = Button(text="Search", width=14, command=search_data)
+b_search.grid(column=2, row=1)
 
 b_password = Button(text="Generate Password", width=14, command=gen_password)
 b_password.grid(column=2, row=3)
-
 
 b_add = Button(text="Add", width=35, command=save_details)
 b_add.grid(column=1, row=4, columnspan=2)
