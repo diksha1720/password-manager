@@ -1,4 +1,8 @@
 # password-manager
+
+A password managing application using tkinter module.
+A user can save the passwords and later retrieve them when required
+
 ### User Interface
 ![Screenshot](images/ss1.PNG)
 
